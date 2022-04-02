@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en" onkeydown="htmlkey(event)">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+    }
+
+    #bird {
+        width: 50px;
+        height: 35px;
+        /* background-color: red; */
+        position: absolute;
+        top: 50%;
+        left: 30%;
+        z-index: 1;
+        background-image: url('bird.svg');
+        background-size: cover;
+        /* background-color: red; */
+    }
+
+    #wing{
+        position:absolute;
+        left: -5px;
+        top: 10px;
+        width: 25px;
+        height: 18px;
+        background-image: url('./wing.svg');
+        background-size: cover;
+        animation: wing_move 2s   infinite  forwards;
+    }
+
+    .bird_fly{
+        transition: top 200ms ease-out;
+    }
+
+    .bird_fall{
+        transition: top 1000ms cubic-bezier(.75,0,1,1);
+    }
+
+    .piller {
+        width: 80px;
+        height: 100%;
+        /* background-color: blue; */
+        position: absolute;
+        animation: move 3s linear forwards;
+        background-image: url(./piller.png);
+        background-size: cover;
+        background-position: center;
+    }
+
+    .hole {
+        width: 100%;
+        height: 30%;
+        background-color: black;
+        position: absolute;
+        border-radius: 100%;
+        border: rgb(0, 255, 200) 3px solid;
+        background-image: url('./portal_gif.gif');
+        background-position: center;
+        background-size: 380%;
+    }
+
+    #gameframe {
+        position: relative;
+        background-color: gray;
+        height: 80%;
+        width: 80%;
+        overflow: hidden;
+    }
+
+    body {
+        display: flex;
+        height: 100vh;
+        border: 1px solid #aaaaaa;
+        position: relative;
+        overflow: hidden;
+        align-items: center;
+        justify-content: center;
+    }
+
+    @keyframes move {
+        0% {
+            left: 100%;
+        }
+
+        100% {
+            left: -50px;
+        }
+    }
+
+    @keyframes wing_move {
+        0%{
+            transform: rotate(20deg);
+        }
+        50%{
+            transform: rotate(-40deg);
+        }
+        100%{
+            transform: rotate(20deg);
+        }
+    }
+</style>
+
+<body ondrop="drop(event)" ondragover="allowDrop(event)">
+    <div class="gameframe" id="gameframe">
+    </div>
+</body>
+<script>
+    // variables
+    var gameframe = document.querySelector('#gameframe')
+    var holes = []
+    var bird_Character = document.getElementById('bird')
+
+    function make_random(min, max) {
+        return ((Math.random() * (max - min)) + min)
+    }
+
+    function htmlkey(event){
+        pause_game(event)
+        fly_the_bird(event)
+    }
+
+    class piller_hole {
+        generate(random) {
+            this.piller = document.createElement('div')
+            this.hole = document.createElement('div')
+            this.piller.classList.add('piller')
+            this.hole.classList.add('hole')
+            this.hole.style.top = random + '%'
+            // this.piller.style.left = this.game_fr + 10 + "px"
+            gameframe.appendChild(this.piller)
+            this.piller.appendChild(this.hole)
+            holes.push(this.hole)
+        }
+
+        out_of_Screeen() {
+            this.piller.addEventListener("animationend", () => {
+                this.piller.remove()
+                // console.log(holes.findIndex(this.hole))
+                // holes.splice(holes.findIndex(this.hole),1)
+            })
+        }
+
+        piller_collision(){
+            // if(this.piller){}
+        }
+    }
+
+    class bird {
+        constructor() {
+            this.bird_body = document.createElement('div')
+            this.bird_body.id = 'bird'
+            this.bird_wing = document.createElement('div')
+            this.bird_wing.id = 'wing'
+            this.bird_body.appendChild(this.bird_wing)
+            gameframe.appendChild(this.bird_body)
+        }
+    }
+
+    class game {
+        game_fr = document.body.clientWidth;
+        create_bird() {
+            var bird_Ch = new bird()
+        }
+
+        create_piller() {
+            this.piller_timeout = setTimeout(() => {
+                var random = Math.random
+                var my_piller = new piller_hole();
+                my_piller.generate(make_random(10, 60))
+                my_piller.out_of_Screeen()
+                this.create_piller()
+            }, 1000);
+        }
+
+        check_collision(){
+
+        }
+
+        fall() {
+            bird_Character = document.getElementById('bird')
+            bird_Character.classList.remove('bird_fly')
+            bird_Character.classList.add('bird_fall')
+            this.gravity_timeout = setTimeout(() => {
+                bird_Character.style.top = 'calc(100% - 35px)'
+                //     bird_Character.style.top = bird_Character.offsetTop + 100 + 'px'
+                //     // this.gravity()
+            }, 150);
+        }
+
+        fly() {
+            clearTimeout(this.fly_timeout)
+            bird_Character = document.getElementById('bird')
+            bird_Character.classList.remove('bird_fall')
+            bird_Character.classList.add('bird_fly')
+            if (bird_Character.offsetTop - ((document.body.clientWidth / 100) * 8) >
+                ((document.body.clientWidth / 100) * 5)) {
+                bird_Character.style.top = bird_Character.offsetTop - ((document.body.clientWidth / 100) * 8) + 'px'
+            }
+            else {
+                bird_Character.style.top = '0px'
+            }
+            this.fly_timeout= setTimeout(() => {
+                this.fall()
+            }, 1);
+            // fall(bird_Character)
+        }
+
+        pause() {
+            clearTimeout(this.piller_timeout)
+            clearTimeout(this.gravity_timeout)
+            var pillers = document.querySelectorAll('.piller')
+            pillers.forEach(element => {
+                element.style.animationPlayState = 'paused'
+            })
+            bird_Character.style.animationPlayState='paused'
+        }
+
+        resume() {
+            var pillers = document.querySelectorAll('.piller')
+            pillers.forEach(element => {
+                element.style.animationPlayState = '';
+            })
+            this.create_piller()
+        }
+
+        
+
+    }
+
+
+
+
+    var mygame = new game()
+    mygame.create_piller()
+    mygame.create_bird()
+    mygame.fall()
+
+    function pause_game(e) {
+        console.log(e.keyCode)
+        if (e.keyCode == 27) {
+            var game = document.getElementById('gameframe')
+            if (game.classList.contains('pause')) {
+                console.warn('play')
+                mygame.resume()
+                game.classList.remove('pause')
+            }
+            else {
+                console.warn('pause')
+                mygame.pause()
+                game.classList.add('pause')
+            }
+        }
+    }
+
+    function fly_the_bird(e){
+        if (e.keyCode==32) {
+            mygame.fly()         
+        }
+    }
+    
+    // document.getElementById('s').getBoundingClientRect()['x']Z
+
+    function collision(bird_Character,hole) {
+        if (((bird_Character.getBoundingClientRect()['x'] + bird_Character.clientWidth >= hole.getBoundingClientRect()['x'])
+            && ((bird_Character.offsetTop + 5) <= hole.offsetTop)) ||
+            ((bird_Character.getBoundingClientRect()['x'] + bird_Character.clientWidth >= hole.getBoundingClientRect()['x'])
+                && ((bird_Character.offsetTop + bird_Character.clientHeight - 5) >= hole.offsetTop+ hole.clientHeight))) {
+            console.log("collision")
+        }
+
+    }
+
+
+    // // function fall(bird_Character){
+    // setInterval(() => {
+    //     bird_Character.style.top = bird_Character.offsetTop + 3 + 'px';
+    // }, 10);
+    // // }
+
+    // fall(bird_Character)
+</script>
+</html>

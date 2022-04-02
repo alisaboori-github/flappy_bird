@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" onclick="fly(bird)">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+    }
+
+    #bird {
+        width: 100px;
+        height: 100px;
+        background-color: red;
+        position: absolute;
+        transition: top 100ms ease-in;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    #piller1 {
+        width: 100px;
+        height: 100%;
+        background-color: red;
+        position: absolute; 
+        animation: move 2s linear infinite backwards; 
+    }
+    
+    #piller2 {
+        width: 100px;
+        height: 100%;
+        background-color: blue;
+        position: absolute;
+        animation: move2 3s linear infinite backwards ;
+    }
+
+    #hole1 {
+        width: 100px;
+        height: 30%;
+        background-color: black;
+        position: absolute;
+        
+    }
+
+    #hole2 {
+        width: 100px;
+        height: 30%;
+        background-color: black;
+        position: absolute;
+    }
+
+    body {
+        width: 100%;
+        height: 1170px;
+        border: 1px solid #aaaaaa;
+        position: relative;
+        /* overflow: hidden; */
+    }
+
+    @keyframes move {
+        0%{
+            left: 100%;
+        }
+        100%{
+            left:0;
+        }
+    }
+
+    @keyframes move2 {
+        0%{
+            left: 150%;
+        }
+        100%{
+            left:0;
+        }
+    }
+</style>
+
+<body ondrop="drop(event)" ondragover="allowDrop(event)">
+    <div id="bird"></div>
+    <div id="piller1" >
+        <div id="hole1"></div>
+    </div>
+    <div id="piller2">
+        <div id="hole2"></div>
+    </div>
+</body>
+<script>
+    function collision(bird, piller_top, piller_bottom) {
+        if (((bird.offsetLeft + bird.clientWidth >= piller_top.offsetLeft)
+            && ((bird.offsetTop + 5) <= piller_top.offsetTop + piller_top.clientHeight)) ||
+            ((bird.offsetLeft + bird.clientWidth >= piller_bottom.offsetLeft)
+                && ((bird.offsetTop + bird.clientHeight - 5) >= piller_bottom.offsetTop))) {
+            console.log("collision")
+        }
+
+    }
+
+    // function fly(bird) {
+    //     bird.style.top = bird.offsetTop - 250 + 'px'
+    //     // fall(bird)
+    // }
+
+    // // function fall(bird){
+    // setInterval(() => {
+    //     bird.style.top = bird.offsetTop + 3 + 'px';
+    // }, 10);
+    // // }
+
+    // fall(bird)
+</script>
+<script>
+    // function allowDrop(ev) {
+    //     ev.preventDefault();
+    // }
+    // var draged_item;
+    // var t_event = "test";
+    // function drag(ev) {
+    //     ev.dataTransfer.setData("text", ev.target.id);
+    //     draged_item = ev.target;
+    //     t_event = ev;
+    //     //problem with draged item is that if we have a div with multiple child we gonna have a problem
+
+    // }
+
+    // const bird =document.getElementById('box1')
+    // const piller_top =document.getElementById('box2')
+    // const piller_bottom =document.getElementById('box3')
+
+    // function drop(ev) {
+    //     var x = ev.clientX;
+    //     var y = ev.clientY;
+    //     x = x - (t_event.clientX - t_event.target.offsetLeft);
+    //     y = y - (t_event.clientY - t_event.target.offsetTop);
+    //     // console.log(t_event.x,t_event.y,x-t_event.x,y-t_event.y)
+    //     draged_item.style.top = y + "px"
+    //     draged_item.style.left = x + "px"
+    //     ev.preventDefault();
+    //     var data = ev.dataTransfer.getData("text");
+    //     ev.target.appendChild(document.getElementById(data));
+    //     collision(bird,piller_top,piller_bottom)
+    // }
+
+</script>
+
+</html>
