@@ -27,6 +27,7 @@ function pause_game(e) {
 function fly_the_bird(e) {
     if (e.keyCode == 32) {
         mygame.fly()
+        bird_sound.play()
     }
 }
 
