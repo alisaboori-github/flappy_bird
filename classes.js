@@ -1,6 +1,13 @@
 class piller_hole {
-    generate(random, id) {
+    generate(random, id, piller_type) {
         this.piller = document.createElement('div')
+        switch (piller_type['name']) {
+            case 'rick_and_morty':
+                this.piller.style.backgroundImage = piller_type['url']
+                break;
+            default:
+                break;
+        }
         this.hole = document.createElement('div')
         this.hole_image = document.createElement('div')
         this.piller.classList.add('piller')
@@ -25,15 +32,22 @@ class piller_hole {
 }
 
 class bird {
-    constructor() {
+    constructor(flying_object) {
         this.bird_body = document.createElement('div')
         this.bird_body.id = 'bird'
-        this.bird_wing = document.createElement('div')
-        this.bird_wing.id = 'wing'
-        this.bird_body.appendChild(this.bird_wing)
-        this.bird_sound = new Audio('./bird.wav')
-        this.wing_sound = new Audio('')
-        // todo add backgroud image of bird (default and costume)
+        switch (flying_object['name']) {
+            case 'rick_and_morty':
+                this.bird_body.style.backgroundImage = flying_object['url']
+                break;
+
+            default:
+                this.bird_wing = document.createElement('div')
+                this.bird_wing.id = 'wing'
+                this.bird_body.appendChild(this.bird_wing)
+                this.bird_sound = new Audio('./bird.wav')
+                this.wing_sound = new Audio('')
+                break;
+        }
         gameframe.appendChild(this.bird_body)
     }
 }
@@ -41,15 +55,14 @@ class bird {
 class game {
     game_fr = document.body.clientWidth;
 
-    constructor() {
+    constructor(flying_object, piller_type, background_image_type) {
         this.score
         this.piller_count = 1
-        this.create_piller()
-        this.create_bird()
+        this.create_piller(piller_type)
+        this.create_bird(flying_object)
         this.fall()
         this.check_collision()
-        this.set_background()
-        // todo set defalt theme and costume theme for set background 
+        this.set_background(background_image_type)
         this.create_score()
     }
 
@@ -60,32 +73,47 @@ class game {
         gameframe.querySelector('.back_highlight').appendChild(this.score_element)
     }
 
-    set_background() {
+    set_background(background_image_type) {
+        switch (background_image_type['name']) {
+            case 'rick_and_morty':
+                this.backgroundImage(background_image_type['url']['img1']
+                    , background_image_type['url']['img2']
+                    , background_image_type['url']['img3'])
+                break;
+            default:
+                this.backgroundImage("url('1.png')", "url('2.png')", "url('3.png')")
+                break;
+        }
+    }
+
+    backgroundImage(img1, img2, img3) {
         var random = Math.random() * 10
         if (random < 3) {
-            gameframe.style.backgroundImage = "url('1.png')"
+            gameframe.style.backgroundImage = img1
         }
         else if (random > 3 && random < 7) {
-            gameframe.style.backgroundImage = "url('2.png')"
+            gameframe.style.backgroundImage = img2
         }
         else if (random > 7 && random < 10) {
-            gameframe.style.backgroundImage = "url('3.png')"
+            gameframe.style.backgroundImage = img3
         }
     }
 
-    create_bird() {
-        this.bird_Ch = new bird()
+    create_bird(flying_object) {
+        this.bird_Ch = new bird(flying_object)
     }
 
-    create_piller() {
+    create_piller(piller_type) {
         this.piller_timeout = setTimeout(() => {
             var random = Math.random
-            var my_piller = new piller_hole();
-            my_piller.generate(make_random(10, 60), this.piller_count)
+            var my_piller = new piller_hole(piller_type);
+            my_piller.generate(make_random(10, 60), this.piller_count, piller_type)
             this.piller_count++;
             my_piller.out_of_Screeen()
-            this.create_piller()
+            this.create_piller(piller_type)
         }, 1000);
+
+
     }
 
     check_collision() {
@@ -98,8 +126,8 @@ class game {
                 }
                 else if (collision(bird_Character, hole) == false) {
                     if (score(bird_Character, hole)) {
-                        this.score = hole.parentElement.id
-                        game_score_element.innerText = `score: ${this.score}`
+                        this.score = Number(hole.parentElement.id)
+                        this.score_element.innerText = `score: ${this.score}`
                     }
                 }
             })
@@ -112,7 +140,7 @@ class game {
         bird_Character.classList.remove('bird_fly')
         bird_Character.classList.add('bird_fall')
         this.gravity_timeout = setTimeout(() => {
-            bird_Character.style.top = 'calc(100% - 35px)'
+            bird_Character.style.top = 'calc(100% - 43px)'
         }, 150);
     }
 
@@ -172,31 +200,118 @@ class game {
         }
         last_score_element.innerText = `last score: ${last_score}`
         game_over_element.classList.remove('hide')
-        game_score_element.classList.add('score_down')
+        this.score_element.classList.add('score_down')
     }
 
 }
 
 class game_option {
     constructor() {
-        this.game_mode = 'default'
+        this.game_modes = [{
+            'name': 'rick_and_morty',
+            'snap_shot': 'url'
+        }]
+        this.open_game_option()
+
     }
 
-    select_game_mode(game_mode){
+    open_game_option() {
+        var slider = `
+            <div class="next" onclick="go_next()">></div>
+            <div class="previous display_none" onclick="go_previous()">""</div>`
+
+        var game_mode_pannel = document.createElement('div')
+        game_mode_pannel.id = 'game_pannel'
+
+        var game_holder = document.createElement('div')
+        game_holder.id = 'game_holder'
+
+        var game_scroll_holder = document.createElement('div')
+        game_scroll_holder.id = 'game_scroll_holder'
+        var classic = document.createElement('div')
+        classic.id = 'classic'
+        classic.setAttribute('onclick', `mygame.rungame('')`)
+        game_scroll_holder.appendChild(classic)
+        this.game_modes.forEach(e => {
+            var game_type = document.createElement('div')
+            game_type.id = e.name
+            game_scroll_holder.appendChild(game_type)
+            game_type.style.backgroundImage = `url("${e.snap_shot}")`
+            game_type.setAttribute('onclick', `mygame.rungame(${e.name})`)
+            // game_type.addEventListener('click', () => {
+            //     game_mode_pannel.remove()
+            //     this.select_game_mode(e.name)
+            // })
+        })
+
+        game_holder.appendChild(game_scroll_holder)
+        game_holder.innerHTML += slider
+        game_mode_pannel.appendChild(game_holder)
+        gameframe.appendChild(game_mode_pannel)
+    }
+
+    rungame(e) {
+        setTimeout(() => {
+            document.getElementById("game_pannel").remove()
+            if(e.length>0){
+                this.select_game_mode(e)
+            }
+            else{
+                this.select_game_mode()
+            }
+        }, 150);
+    }
+
+    select_game_mode(game_mode) {
         switch (game_mode) {
             case 'rick_and_morty':
                 this.rick_and_morty()
                 break;
-        
+
             default:
-                
+                this.default_game()
                 break;
         }
     }
 
-    rick_and_morty(){
-
+    rick_and_morty() {
+        var flying_object_value = {
+            'name': 'rick_and_morty',
+            'url': ''
+        }
+        var piller_type_value = {
+            'name': 'rick_and_morty',
+            'url': ''
+        }
+        var background_image_type_value = {
+            'name': 'rick_and_morty',
+            'url': {
+                'img1': '',
+                'img2': '',
+                'img3': ''
+            }
+        }
+        this.new_game = new game(flying_object_value, piller_type_value, background_image_type_value)
     }
 
+    default_game() {
+        var flying_object = {
+            'name': '',
+            'url': ''
+        }
+        var piller_type = {
+            'name': '',
+            'url': ''
+        }
+        var background_image_type = {
+            'name': '',
+            'url': {
+                'img1': '',
+                'img2': '',
+                'img3': ''
+            }
+        }
+        this.new_game = new game(flying_object, piller_type, background_image_type)
+    }
 
 }

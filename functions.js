@@ -9,26 +9,26 @@ function htmlkey(event) {
 
 function pause_game(e) {
     // console.log(e.keyCode)
-    if (e.keyCode == 27) {
-        var game = document.getElementById('gameframe')
-        if (game.classList.contains('pause')) {
-            console.warn('play')
-            mygame.resume()
-            game.classList.remove('pause')
-        }
-        else {
-            console.warn('pause')
-            mygame.pause()
-            game.classList.add('pause')
-        }
-    }
+    // if (e.keyCode == 27) {
+    //     var game = document.getElementById('gameframe')
+    //     if (game.classList.contains('pause')) {
+    //         console.warn('play')
+    //         mygame.new_game.resume()
+    //         game.classList.remove('pause')
+    //     }
+    //     else {
+            console.warn('unavalable,')
+    //         mygame.new_game.pause()
+    //         game.classList.add('pause')
+    //     }
+    // }
 }
 
 function fly_the_bird(e) {
     if (e.keyCode == 32) {
-        mygame.fly()
+        mygame.new_game.fly()
         if(Math.floor(Math.random()*100)>90){
-            mygame.bird_Ch.bird_sound.play()
+            mygame.new_game.bird_Ch.bird_sound.play()
         }
         else{
         }
@@ -85,11 +85,11 @@ function check_cookie(){
     cookies.forEach(element=>{
         if(element.includes('score')){
             var temp = element.split('=')
-            last_score=temp[1]
+            last_score=Number(temp[1])
         }
         if(element.includes('top_sc')){
             var temp = element.split('=')
-            top_score=temp[1]
+            top_score=Number(temp[1])
         }
     })
 }
@@ -97,3 +97,53 @@ function check_cookie(){
 function set_scores(){
     last_score_element.innerText = last_score
 }
+
+function go_next(params) {
+    document.querySelector(".game_scroll_holder").scrollLeft += 352;
+    if (document.querySelector(".previous").classList.contains("display_none")) {
+        document.querySelector(".previous").classList.remove("display_none")
+    }
+    var width = document.querySelector(".game_scroll_holder").scrollWidth - document.querySelector(".game_scroll_holder").clientWidth
+    setTimeout(() => {
+        if (document.querySelector(".game_scroll_holder").scrollLeft >= width - 50) {
+            document.querySelector(".next").classList.add("display_none")
+        }
+    }, 300);
+}
+function go_previous(params) {
+    document.querySelector(".game_scroll_holder").scrollLeft -= 352;
+    if (document.querySelector(".next").classList.contains("display_none")) {
+        document.querySelector(".next").classList.remove("display_none")
+    }
+    setTimeout(() => {
+        if (document.querySelector(".game_scroll_holder").scrollLeft < 50) {
+            document.querySelector(".previous").classList.add("display_none")
+        }
+    }, 300);
+}
+
+function on_scroll() {
+    if (document.querySelector(".game_scroll_holder").scrollLeft < 50) {
+        document.querySelector(".previous").classList.add("display_none")
+    }
+    else if (document.querySelector(".previous").classList.contains("display_none")) {
+        document.querySelector(".previous").classList.remove("display_none")
+    }
+    var width = document.querySelector(".game_scroll_holder").scrollWidth - document.querySelector(".game_scroll_holder").clientWidth
+    if (document.querySelector(".game_scroll_holder").scrollLeft >= width - 50) {
+        document.querySelector(".next").classList.add("display_none")
+    }
+    else if (document.querySelector(".next").classList.contains("display_none")) {
+        document.querySelector(".next").classList.remove("display_none")
+    }
+}
+
+function set_variables(){
+    setTimeout(() => {
+        game_score_element=document.getElementById('score')
+        last_score_element=document.getElementById('last_score')
+        top_score_element=document.getElementById('top_score')
+        game_over_element =document.getElementById('game_over')
+    }, 151);
+}
+
