@@ -31,6 +31,9 @@ class bird {
         this.bird_wing = document.createElement('div')
         this.bird_wing.id = 'wing'
         this.bird_body.appendChild(this.bird_wing)
+        this.bird_sound = new Audio('./bird.wav')
+        this.wing_sound = new Audio('')
+        // todo add backgroud image of bird (default and costume)
         gameframe.appendChild(this.bird_body)
     }
 }
@@ -46,6 +49,15 @@ class game {
         this.fall()
         this.check_collision()
         this.set_background()
+        // todo set defalt theme and costume theme for set background 
+        this.create_score()
+    }
+
+    create_score() {
+        this.score_element = document.createElement('div')
+        this.score_element.id = 'score'
+        this.score_element.innerText = 'score: 0'
+        gameframe.querySelector('.back_highlight').appendChild(this.score_element)
     }
 
     set_background() {
@@ -62,7 +74,7 @@ class game {
     }
 
     create_bird() {
-        var bird_Ch = new bird()
+        this.bird_Ch = new bird()
     }
 
     create_piller() {
@@ -152,15 +164,39 @@ class game {
         }, 50)
 
         save_score(this.score)
-        if(save_top_score(this.score)){
-            top_score_element.innerText=`top score: ${this.score}`
+        if (save_top_score(this.score)) {
+            top_score_element.innerText = `top score: ${this.score}`
         }
-        else{
-            top_score_element.innerText=`top score: ${top_score}`
+        else {
+            top_score_element.innerText = `top score: ${top_score}`
         }
-        last_score_element.innerText=`last score: ${last_score}`
+        last_score_element.innerText = `last score: ${last_score}`
         game_over_element.classList.remove('hide')
         game_score_element.classList.add('score_down')
     }
+
+}
+
+class game_option {
+    constructor() {
+        this.game_mode = 'default'
+    }
+
+    select_game_mode(game_mode){
+        switch (game_mode) {
+            case 'rick_and_morty':
+                this.rick_and_morty()
+                break;
+        
+            default:
+                
+                break;
+        }
+    }
+
+    rick_and_morty(){
+
+    }
+
 
 }

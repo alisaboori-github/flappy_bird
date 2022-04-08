@@ -27,7 +27,12 @@ function pause_game(e) {
 function fly_the_bird(e) {
     if (e.keyCode == 32) {
         mygame.fly()
-        bird_sound.play()
+        if(Math.floor(Math.random()*100)>90){
+            mygame.bird_Ch.bird_sound.play()
+        }
+        else{
+        }
+
     }
 }
 
