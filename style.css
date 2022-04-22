@@ -11,24 +11,26 @@
 }
 
 #bird {
-    width: 70px;
-    height: 50px;
+    width: 130px;
+    height: 70px;
     /* background-color: red; */
     position: absolute;
     top: 50%;
-    left: 30%;
+    left: 20%;
     z-index: 1;
     background-image: url('bird.svg');
-    background-size: cover;
+    background-size: 90px;
+    background-position: 25px;
+    background-repeat: no-repeat;
     /* background-color: red; */
 }
 
 #wing {
     position: absolute;
-    left: -5px;
-    top: 15px;
-    width: 30px;
-    height: 22px;
+    left: 15px;
+    top: 18px;
+    width: 37px;
+    height: 27px;
     background-image: url('./wing.svg');
     background-size: cover;
     animation: wing_move 2s infinite forwards;
@@ -51,8 +53,9 @@
     position: absolute;
     animation: move 3s linear forwards;
     background-image: url(./piller.png);
-    background-size: cover;
+    background-size: 100% 100%;
     background-position: center;
+    background-repeat: no-repeat;
 }
 
 .hole {
@@ -182,6 +185,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     width: 100%;
     height: 100%;
     background-color: rgb(46, 46, 46);
@@ -190,7 +194,7 @@ body {
 #game_holder {
     width: 80%;
     display: flex;
-    /* position: relative; */
+    position: relative;
     margin: 0 5em;
 }
 
@@ -202,14 +206,22 @@ body {
     padding: 1em;
 }
 
+#game_scroll_holder::-webkit-scrollbar {
+    display: none;
+}
+
 #game_scroll_holder>* {
-    width: 320px;
+    min-width: 320px;
     height: 420px;
     border-radius: 15px;
     box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.13);
     padding: 2em 1.5em 2em;
     margin: 0 1em;
     cursor: pointer;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    /* background-image: url("./pickle\\ rickkkk-100.jpg"); */
 }
 
 .next {
@@ -244,6 +256,16 @@ body {
     cursor: pointer;
 }
 
+.display_none{
+    display: none;
+}
+
+.title{
+    position: absolute;
+    color: white;
+    top: 40px;
+    font-size: 45px;
+}
 
 @keyframes move {
     0% {

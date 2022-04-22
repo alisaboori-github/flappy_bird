@@ -1,15 +1,17 @@
 class piller_hole {
     generate(random, id, piller_type) {
         this.piller = document.createElement('div')
+        this.hole = document.createElement('div')
+        this.hole_image = document.createElement('div')
         switch (piller_type['name']) {
             case 'rick_and_morty':
-                this.piller.style.backgroundImage = piller_type['url']
+                console.log('2')
+                this.piller.style.backgroundImage = piller_type['url']['piller']
+                this.hole_image.style.backgroundImage=piller_type['url']['hole']
                 break;
             default:
                 break;
         }
-        this.hole = document.createElement('div')
-        this.hole_image = document.createElement('div')
         this.piller.classList.add('piller')
         this.piller.id = id
         this.hole.classList.add('hole')
@@ -37,7 +39,10 @@ class bird {
         this.bird_body.id = 'bird'
         switch (flying_object['name']) {
             case 'rick_and_morty':
+                console.log('3')
                 this.bird_body.style.backgroundImage = flying_object['url']
+                this.bird_body.style.backgroundPosition = 'right'
+                this.bird_body.style.backgroundSize = '100%'
                 break;
 
             default:
@@ -76,6 +81,7 @@ class game {
     set_background(background_image_type) {
         switch (background_image_type['name']) {
             case 'rick_and_morty':
+                console.log('4')
                 this.backgroundImage(background_image_type['url']['img1']
                     , background_image_type['url']['img2']
                     , background_image_type['url']['img3'])
@@ -208,9 +214,13 @@ class game {
 class game_option {
     constructor() {
         this.game_modes = [{
+            'name': 'classic',
+            'snap_shot': './Screenshot\\ \\(383\\).png'
+        },
+        {
             'name': 'rick_and_morty',
-            'snap_shot': 'url'
-        }]
+            'snap_shot': './Screenshot\\ \\(392\\).png'
+        },]
         this.open_game_option()
 
     }
@@ -222,22 +232,23 @@ class game_option {
 
         var game_mode_pannel = document.createElement('div')
         game_mode_pannel.id = 'game_pannel'
-
+        game_mode_pannel.innerHTML += `<h1 class="title">select your game mode</h1>`
         var game_holder = document.createElement('div')
         game_holder.id = 'game_holder'
 
         var game_scroll_holder = document.createElement('div')
         game_scroll_holder.id = 'game_scroll_holder'
-        var classic = document.createElement('div')
-        classic.id = 'classic'
-        classic.setAttribute('onclick', `mygame.rungame('')`)
-        game_scroll_holder.appendChild(classic)
-        this.game_modes.forEach(e => {
+        // var classic = document.createElement('div')
+        // classic.id = 'classic'
+        // classic.setAttribute('onclick', `mygame.rungame('')`)
+        // game_scroll_holder.appendChild(classic)
+        this.game_modes.forEach(mode => {
             var game_type = document.createElement('div')
-            game_type.id = e.name
+            game_type.id = mode.name
             game_scroll_holder.appendChild(game_type)
-            game_type.style.backgroundImage = `url("${e.snap_shot}")`
-            game_type.setAttribute('onclick', `mygame.rungame(${e.name})`)
+            game_type.style.backgroundImage = `url("${mode.snap_shot}")`
+            game_type.setAttribute('onclick', `mygame.rungame("${mode.name}")`)
+            console.log(mode.name)
             // game_type.addEventListener('click', () => {
             //     game_mode_pannel.remove()
             //     this.select_game_mode(e.name)
@@ -250,13 +261,15 @@ class game_option {
         gameframe.appendChild(game_mode_pannel)
     }
 
-    rungame(e) {
+    rungame(mode) {
+        console.log(mode)
         setTimeout(() => {
             document.getElementById("game_pannel").remove()
-            if(e.length>0){
-                this.select_game_mode(e)
+            if (mode.length > 0) {
+                this.select_game_mode(mode)
+                console.log('t')
             }
-            else{
+            else {
                 this.select_game_mode()
             }
         }, 150);
@@ -266,6 +279,7 @@ class game_option {
         switch (game_mode) {
             case 'rick_and_morty':
                 this.rick_and_morty()
+                console.log('1')
                 break;
 
             default:
@@ -275,40 +289,46 @@ class game_option {
     }
 
     rick_and_morty() {
-        var flying_object_value = {
+        var flying_object = {
             'name': 'rick_and_morty',
-            'url': ''
+            'url': 'url("./rick2.png")'
         }
-        var piller_type_value = {
-            'name': 'rick_and_morty',
-            'url': ''
-        }
-        var background_image_type_value = {
+        var piller_type = {
             'name': 'rick_and_morty',
             'url': {
-                'img1': '',
-                'img2': '',
-                'img3': ''
+                'piller': 'url("./pickle\\ rickkkk.png")',
+                'hole': 'url("./portal_rick.gif")'
             }
         }
-        this.new_game = new game(flying_object_value, piller_type_value, background_image_type_value)
+        var background_image_type = {
+            'name': 'rick_and_morty',
+            'url': {
+                'img1': 'url("./back2.png")',
+                'img2': 'url("./back3.png")',
+                'img3': 'url("./back4.png")'
+            }
+        }
+        this.new_game = new game(flying_object, piller_type, background_image_type)
     }
 
     default_game() {
         var flying_object = {
             'name': '',
-            'url': ''
+            'url': "url('bird.svg')"
         }
         var piller_type = {
             'name': '',
-            'url': ''
+            'url': {
+                'piller': "url(./piller.png)",
+                'hole': 'url("./portal.gif")'
+            }
         }
         var background_image_type = {
             'name': '',
             'url': {
-                'img1': '',
-                'img2': '',
-                'img3': ''
+                'img1': 'url()',
+                'img2': 'url()',
+                'img3': 'url()'
             }
         }
         this.new_game = new game(flying_object, piller_type, background_image_type)

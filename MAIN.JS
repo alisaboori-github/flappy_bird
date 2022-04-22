@@ -12,3 +12,4 @@ var game_over_element
 set_variables()
 // var bird_sound =new Audio('./bird.wav')
 check_cookie()
+check_scroll()

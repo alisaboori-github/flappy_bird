@@ -98,39 +98,51 @@ function set_scores(){
     last_score_element.innerText = last_score
 }
 
+function check_scroll(params) {
+    var temp_game_scroll_holder=document.getElementById('game_scroll_holder')
+    var length_=0
+    temp_game_scroll_holder.querySelectorAll('div').forEach(()=>{
+        length_+=342
+    })
+    if(length_<temp_game_scroll_holder.clientWidth){
+        document.querySelector('.previous').classList.add('display_none')
+        document.querySelector('.next').classList.add('display_none')
+    }
+}
+
 function go_next(params) {
-    document.querySelector(".game_scroll_holder").scrollLeft += 352;
+    document.querySelector("#game_scroll_holder").scrollLeft += 352;
     if (document.querySelector(".previous").classList.contains("display_none")) {
         document.querySelector(".previous").classList.remove("display_none")
     }
-    var width = document.querySelector(".game_scroll_holder").scrollWidth - document.querySelector(".game_scroll_holder").clientWidth
+    var width = document.querySelector("#game_scroll_holder").scrollWidth - document.querySelector("#game_scroll_holder").clientWidth
     setTimeout(() => {
-        if (document.querySelector(".game_scroll_holder").scrollLeft >= width - 50) {
+        if (document.querySelector("#game_scroll_holder").scrollLeft >= width - 50) {
             document.querySelector(".next").classList.add("display_none")
         }
     }, 300);
 }
 function go_previous(params) {
-    document.querySelector(".game_scroll_holder").scrollLeft -= 352;
+    document.querySelector("#game_scroll_holder").scrollLeft -= 352;
     if (document.querySelector(".next").classList.contains("display_none")) {
         document.querySelector(".next").classList.remove("display_none")
     }
     setTimeout(() => {
-        if (document.querySelector(".game_scroll_holder").scrollLeft < 50) {
+        if (document.querySelector("#game_scroll_holder").scrollLeft < 50) {
             document.querySelector(".previous").classList.add("display_none")
         }
     }, 300);
 }
 
 function on_scroll() {
-    if (document.querySelector(".game_scroll_holder").scrollLeft < 50) {
+    if (document.querySelector("#game_scroll_holder").scrollLeft < 50) {
         document.querySelector(".previous").classList.add("display_none")
     }
     else if (document.querySelector(".previous").classList.contains("display_none")) {
         document.querySelector(".previous").classList.remove("display_none")
     }
-    var width = document.querySelector(".game_scroll_holder").scrollWidth - document.querySelector(".game_scroll_holder").clientWidth
-    if (document.querySelector(".game_scroll_holder").scrollLeft >= width - 50) {
+    var width = document.querySelector("#game_scroll_holder").scrollWidth - document.querySelector("#game_scroll_holder").clientWidth
+    if (document.querySelector("#game_scroll_holder").scrollLeft >= width - 50) {
         document.querySelector(".next").classList.add("display_none")
     }
     else if (document.querySelector(".next").classList.contains("display_none")) {
